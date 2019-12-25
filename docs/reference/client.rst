@@ -54,6 +54,9 @@ Authentication/Logout
     Specifies if this client can use local accounts, or external IdPs only. Defaults to `true`.
 ``IdentityProviderRestrictions``
     Specifies which external IdPs can be used with this client (if list is empty all IdPs are allowed). Defaults to empty.
+``UserSsoLifetime`` `added in 2.3`
+    The maximum duration (in seconds) since the last time the user authenticated. Defaults to ``null``.
+    You can adjust the lifetime of a session token to control when and how often a user is required to reenter credentials instead of being silently authenticated, when using a web application.
 
 Token
 ^^^^^
@@ -110,3 +113,11 @@ Consent Screen
     URI to further information about client (used on consent screen)
 ``LogoUri``
     URI to client logo (used on consent screen)
+
+Device flow
+^^^^^^^^^^^
+
+``UserCodeType``
+    Specifies the type of user code to use for the client. Otherwise falls back to default.
+``DeviceCodeLifetime``
+    Lifetime to device code in seconds (defaults to 300 seconds / 5 minutes)

@@ -45,8 +45,15 @@ This options class contains properties to control the configuration store and ``
     Delegate of type ``Action<DbContextOptionsBuilder>`` used as a callback to configure the underlying ``ConfigurationDbContext``.
     The delegate can configure the ``ConfigurationDbContext`` in the same way if EF were being used directly with ``AddDbContext``, which allows any EF-supported database to be used.
 ``DefaultSchema``
-    Allows setting the default database schema name for all the tables in the ``ConfigurationDbContext``.
+    Allows setting the default database schema name for all the tables in the ``ConfigurationDbContext``
+    ::
+            options.DefaultSchema = "myConfigurationSchema";      
 
+If you need to change the schema for the Migration History Table, you can chain another action to the ``UseSqlServer``::
+
+    options.ConfigureDbContext = b =>
+        b.UseSqlServer(connectionString,
+            sql => sql.MigrationsAssembly(migrationsAssembly).MigrationsHistoryTable("MyConfigurationMigrationTable", "myConfigurationSchema"));
 
 Operational Store support for authorization grants, consents, and tokens (refresh and reference)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -73,7 +80,7 @@ To use the operational store support, use the ``AddOperationalStore`` extension 
 
                 // this enables automatic token cleanup. this is optional.
                 options.EnableTokenCleanup = true;
-                options.TokenCleanupInterval = 30; // interval in seconds
+                options.TokenCleanupInterval = 3600; // interval in seconds (default is 3600)
             });
     }
 
@@ -103,6 +110,6 @@ We do not provide any support for creating your database or migrating your data 
 You are expected to manage the database creation, schema changes, and data migration in any way your organization sees fit.
 
 Using EF migrations is one possible approach to this. 
-If you do wish to use migrations, then see the :ref:`EF quickstart <refEntityFrameworkQuickstart>` for samples on how to get started, or consult the Microsoft `documentation on EF migrations <https://docs.microsoft.com/en-us/ef/core/miscellaneous/cli/dotnet>`_.
+If you do wish to use migrations, then see the :ref:`EF quickstart <refEntityFrameworkQuickstart>` for samples on how to get started, or consult the Microsoft `documentation on EF migrations <https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/index>`_.
 
-We also publish `sample SQL scripts <https://github.com/IdentityServer/IdentityServer4.EntityFramework/tree/dev/src/Host/Migrations/IdentityServer>`_ for the current version of the database schema.
+We also publish `sample SQL scripts <https://github.com/IdentityServer/IdentityServer4.EntityFramework.Storage/tree/dev/migrations/SqlServer/Migrations>`_ for the current version of the database schema.

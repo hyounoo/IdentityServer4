@@ -6,14 +6,25 @@ IdentityServer Options
     Set the issuer name that will appear in the discovery document and the issued JWT tokens.
     It is recommended to not set this property, which infers the issuer name from the host name that is used by the clients.
 
+* ``LowerCaseIssuerUri``
+    Set to ``false`` to preserve the original casing of the IssuerUri. Defaults to ``true``.
+
 * ``PublicOrigin``
     The origin of this server instance, e.g. https://myorigin.com. If not set, the origin name is inferred from the request.
+
+* ``AccessTokenJwtType``
+    Specifies the value used for the JWT typ header for access tokens (defaults to ``at+jwt``).
+* ``EmitLegacyResourceAudienceClaim``
+    Emits an ``aud`` claim with the format issuer/resources. That's needed for some older access token validation plumbing. Defaults to false.
 
 Endpoints
 ^^^^^^^^^
 Allows enabling/disabling individual endpoints, e.g. token, authorize, userinfo etc.
 
 By default all endpoints are enabled, but you can lock down your server by disabling endpoint that you don't need.
+
+* ``EnableJwtRequestUri``
+    JWT request_uri processing is enabled on the authorize endpoint. Defaults to ``false``.
 
 Discovery
 ^^^^^^^^^
@@ -23,6 +34,9 @@ The ``CustomEntries`` dictionary allows adding custom elements to the discovery 
 
 Authentication
 ^^^^^^^^^^^^^^
+* ``CookieAuthenticationScheme``
+    Sets the cookie authenitcation scheme confgured by the host used for interactive users. If not set, the scheme will inferred from the host's default authentication scheme. This setting is typically used when AddPolicyScheme is used in the host as the default scheme.
+
 * ``CookieLifetime``
     The authentication cookie lifetime (only effective if the IdentityServer-provided cookie handler is used).
 
@@ -49,8 +63,8 @@ Allows setting length restrictions on various protocol parameters like client id
 UserInteraction
 ^^^^^^^^^^^^^^^
 
-* ``LoginUrl``, ``LogoutUrl``, ``ConsentUrl``, ``ErrorUrl``
-    Sets the the URLs for the login, logout, consent and error pages.
+* ``LoginUrl``, ``LogoutUrl``, ``ConsentUrl``, ``ErrorUrl``, ``DeviceVerificationUrl``
+    Sets the URLs for the login, logout, consent, error and device verification pages.
 * ``LoginReturnUrlParameter``
     Sets the name of the return URL parameter passed to the login page. Defaults to *returnUrl*.
 * ``LogoutIdParameter``
@@ -61,6 +75,8 @@ UserInteraction
     Sets the name of the error message id parameter passed to the error page. Defaults to *errorId*.
 * ``CustomRedirectReturnUrlParameter``
     Sets the name of the return URL parameter passed to a custom redirect from the authorization endpoint. Defaults to *returnUrl*.
+* ``DeviceVerificationUserCodeParameter``
+    Sets the name of the user code parameter passed to the device verification page. Defaults to *userCode*.
 * ``CookieMessageThreshold``
     Certain interactions between IdentityServer and some UI pages require a cookie to pass state and context (any of the pages above that have a configurable "message id" parameter).
     Since browsers have limits on the number of cookies and their size, this setting is used to prevent too many cookies being created. 
@@ -105,3 +121,19 @@ IdentityServer emits CSP headers for some responses, where appropriate.
 
 * ``AddDeprecatedHeader``
     Indicates if the older ``X-Content-Security-Policy`` CSP header should also be emitted (in addition to the standards-based header value). Defaults to true.
+
+Device Flow
+^^^^^^^^^^^
+
+* ``DefaultUserCodeType``
+    The user code type to use, unless set at the client level. Defaults to *Numeric*, a 9-digit code.
+* ``Interval``
+    Defines the minimum allowed polling interval on the token endpoint. Defaults to *5*.
+
+Mutual TLS
+^^^^^^^^^^
+
+* ``Enabled``
+    Specifies if MTLS support should be enabled. Defaults to ``false``.
+* ``ClientCertificateAuthenticationScheme``
+    Specifies the name of the authentication handler for X.509 client certificates. Defaults to ``"Certificate"``.
